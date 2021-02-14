@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.os.Message;
 import android.util.Log;
 
+import com.example.tyuumon.beans.DetailsItem;
 import com.example.tyuumon.beans.MenuItem;
 import com.google.gson.Gson;
 
@@ -107,6 +108,43 @@ public class NetWrokUtil {
         }
 
 
+        return null;
+    }
+
+    public DetailsItem getDetails(){
+        final Gson gson = new Gson();
+        try {
+            URL url1 = new URL(this.url);
+            HttpURLConnection connection = (HttpURLConnection) url1.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setConnectTimeout(6000);
+            if(connection.getResponseCode() == HttpURLConnection.HTTP_OK){
+                //5.判断响应吗并获取响应数据
+                InputStream in = connection.getInputStream();
+                byte[] b = new byte[1024];
+                //在循环中读取数据
+                int len = 0;
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                while ((len = in.read(b))>-1){
+                    //写入缓存流
+                    baos.write(b,0,len);
+                }
+                String msg = new String(baos.toByteArray());
+                JSONObject jo = new JSONObject(msg);
+                JSONObject data = jo.getJSONObject("data");
+                DetailsItem detailsItem = gson.fromJson(data.toString(),DetailsItem.class);
+                Log.i("detailsItem",detailsItem.toString());
+                Bitmap bitmap = this.getPics(detailsItem.getImg());
+                detailsItem.setBitmap(bitmap);
+                return detailsItem;
+            };
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 

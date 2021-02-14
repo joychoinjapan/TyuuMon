@@ -1,5 +1,6 @@
 package com.example.tyuumon.fragment;
 
+import android.net.sip.SipSession;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -12,9 +13,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import com.example.tyuumon.Adapters.MyMenuListAdapter;
+import com.example.tyuumon.MainActivity;
 import com.example.tyuumon.R;
 import com.example.tyuumon.Util.DataUtil;
 import com.example.tyuumon.Util.NetWrokUtil;
@@ -35,20 +39,30 @@ public class IndexFragment extends Fragment {
     private List<Map<String,Object>> list;
     private List<Object> listItems;
     private RecyclerView recyclerView;
+    private View view;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_index, container, false);
+        view = inflater.inflate(R.layout.fragment_index, container, false);
 
         setGridView(view);
         RequestTask requestTask = new RequestTask(view);
         requestTask.execute("http://www.imooc.com/api/shopping?type=11");
 
+
         return view;
     }
+
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        RequestTask requestTask = new RequestTask(view);
+//        requestTask.execute("http://www.imooc.com/api/shopping?type=11");
+//
+//    }
 
     public class RequestTask extends AsyncTask<String,Void,List<MenuItem>> {
         private View view;
@@ -91,6 +105,18 @@ public class IndexFragment extends Fragment {
                 = new MyMenuListAdapter(itemLists,getContext());
         recyclerView.setAdapter(myMenuListAdapter);
 
+        myMenuListAdapter.setOnItemClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity activity = (MainActivity)getActivity();
+                activity.setDetailsFragment();
+
+            }
+        });
+
+
+
+
     }
 
     private void setGridView(View view) {
@@ -109,6 +135,9 @@ public class IndexFragment extends Fragment {
         gridView.setAdapter(simpleAdapter);
 
     }
+
+
+
 
 
 

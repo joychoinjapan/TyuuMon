@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.example.tyuumon.fragment.DetailsFragment;
 import com.example.tyuumon.fragment.IndexFragment;
 import com.example.tyuumon.fragment.MeFragment;
 import com.example.tyuumon.fragment.ShoppingFragment;
@@ -42,4 +43,12 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
 
     }
+
+    public void setDetailsFragment(){
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.replace(R.id.container,new DetailsFragment());
+        fragmentTransaction.commit();
+    }
+
 }
